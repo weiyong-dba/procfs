@@ -129,7 +129,18 @@ func (p Proc) CmdLine() ([]string, error) {
 	if len(data) < 1 {
 		return []string{}, nil
 	}
+	return strings.Split(string(bytes.TrimRight(data, string("\x00"))), string(byte(0))), nil
+}
 
+// NetTcp returns the tcp connect of a process.
+func (p Proc) NetTcp() ([]string, error) {
+	data, err := util.ReadFileNoStat(p.path("net/tcp"))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) < 1 {
+		return []string{}, nil
+	}
 	return strings.Split(string(bytes.TrimRight(data, string("\x00"))), string(byte(0))), nil
 }
 
